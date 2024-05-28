@@ -4,6 +4,65 @@ from .models import Expense
 from django.db.models import Sum
 import datetime
 # Create your views here.
+
+#---------------authentication--------------
+from .forms import LoginForm,RegisterForm
+from django.contrib.auth import login,authenticate,logout
+
+# ----------------------------------------User Login and Registration----------------------------------------
+def sign_up(request):
+    if request.method == 'GET':
+        form=RegisterForm()
+        return render(request,'myapp/register.html',{'form':form})
+    
+    if request.method == 'POST':
+        form = RegisterForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('index')
+        else:
+            return render(request,'myapp/register.html',{'form':form})
+
+    
+    return render(request,'myapp/register.html',{'form':form})
+
+
+
+def user_login(request):
+    form = LoginForm()
+    if request.method == 'POST':
+        form = LoginForm(request.POST)
+        if form.is_valid():
+            user = authenticate(username = form.cleaned_data['username'],password = form.cleaned_data['password'])
+
+            if user is not None:
+                login(request,user)
+                return redirect('index')
+            
+            
+    
+    return render(request,'myapp/login.html',{'form':form})
+
+def logout_user(request):
+    logout(request)
+    return redirect('login')
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#----------------------------------------------------- Code for Expense tracker -----------------------------------------------------
+
+
 def index(request):
     if request.method=='POST':
         expense = ExpenseForm(request.POST)
