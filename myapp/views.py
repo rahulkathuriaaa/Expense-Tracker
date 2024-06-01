@@ -3,6 +3,7 @@ from .forms import ExpenseForm
 from .models import Expense
 from django.db.models import Sum
 import datetime
+from django.contrib.auth.decorators import login_required
 # Create your views here.
 
 #---------------authentication--------------
@@ -18,8 +19,10 @@ def sign_up(request):
     if request.method == 'POST':
         form = RegisterForm(request.POST)
         if form.is_valid():
-            form.save()
+            user = form.save()
+            login(request,user)
             return redirect('index')
+
         else:
             return render(request,'myapp/register.html',{'form':form})
 
@@ -62,15 +65,18 @@ def logout_user(request):
 
 #----------------------------------------------------- Code for Expense tracker -----------------------------------------------------
 
-
+@login_required(login_url='user/login/')
 def index(request):
     if request.method=='POST':
-        expense = ExpenseForm(request.POST)
-        if expense.is_valid():
-            expense.save()
+        form = ExpenseForm(request.POST)
+        if form.is_valid():
+            expense = form.save(commit=False)
+            expense.user = request.user
+            expense.save() 
+        
 
     
-    expenses = Expense.objects.all()
+    expenses = Expense.objects.filter(user=request.user)
 
     total_expenses = expenses.aggregate(Sum('amount'))
 
@@ -108,7 +114,7 @@ def index(request):
     expense_form = ExpenseForm()
     return render(request,'myapp/index.html',{'expense_form':expense_form,'expenses':expenses,'total_expenses':total_expenses,'yearly_sum':yearly_sum,'weekly_sum':weekly_sum,'monthly_sum':monthly_sum,'daily_sums':daily_sums,'categorical_sums':categorical_sums})
 
-
+@login_required(login_url='user/login/')
 def edit(request,id):
     expense = Expense.objects.get(id=id)
     expense_form = ExpenseForm(instance=expense)
@@ -121,6 +127,8 @@ def edit(request,id):
             return redirect('index')
     return render(request,'myapp/edit.html',{'expense_form':expense_form})
 
+
+@login_required(login_url='user/login/')
 def delete(request,id):
     if request.method == 'POST' and 'delete' in request.POST:
         expense = Expense.objects.get(id=id)
