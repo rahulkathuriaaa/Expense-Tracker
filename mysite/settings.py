@@ -11,7 +11,8 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
 from pathlib import Path
-
+import dj_database_url
+import os
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -20,12 +21,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-b!s85++$dpl@wss=dma0@*!9ssw0)5q085crb*ov8ux*n29(+j'
+SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get('DEBUG','FALSE').lower() == 'true'
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS').split(' ')
 
 
 # Application definition
@@ -86,6 +87,11 @@ DATABASES = {
     }
 }
 
+database_url = os.environ.get('DATABASE_URL')
+
+DATABASES['default'] = dj_database_url.parse(database_url)
+
+# postgres://expense_tracker_11is_user:5d3dkNYcMtTTVabxFdS0LLQdiZl3CZNx@dpg-cpe3d4tds78s73eppflg-a.oregon-postgres.render.com/expense_tracker_11is
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
