@@ -91,7 +91,6 @@ database_url = os.environ.get('DATABASE_URL')
 
 DATABASES['default'] = dj_database_url.parse(database_url)
 
-# postgres://expense_tracker_11is_user:5d3dkNYcMtTTVabxFdS0LLQdiZl3CZNx@dpg-cpe3d4tds78s73eppflg-a.oregon-postgres.render.com/expense_tracker_11is
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
