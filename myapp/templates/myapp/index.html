@@ -1,7 +1,28 @@
 {% extends "myapp/base.html" %}
 {% load static %}
 {% load humanize %}
+{% block msg %}
+  {% if messages %}
+  {% for message in messages %}
+  <div class="container mx-auto mt-10 space-y-5">
+    <!-- Alert Success  -->
+    <div
+      class="flex justify-between text-{% if message.tags == 'success' %}green{% else %}red{% endif %}-200 shadow-inner rounded p-3 bg-{% if message.tags == 'success' %}green{% else %}red{% endif %}-600"
+    >
+      <p class="self-center">
+        <strong>Success </strong>{{message}}
+      </p>
+      <strong class="text-xl align-center cursor-pointer alert-del"
+        >&times;</strong
+      >
+    </div>
+  {% endfor %}
+  {% endif %}
+{% endblock msg %}
+
 {% block body %}
+
+
 <div class="m-10 font-bold">Add Expense ➕</div>
 <form method="post" class="shadow-lg m-10 rounded-lg ">
 
@@ -273,6 +294,16 @@
             }
         }
     });
+
+
+    
+        document.querySelectorAll('[data-dismissible="alert"]').forEach(function(alert) {
+          var closeButton = alert.querySelector('[data-dismissible-target="alert"]');
+          closeButton.addEventListener('click', function() {
+            alert.style.display = 'none';
+          });
+        });
+      
 
 </script>
 

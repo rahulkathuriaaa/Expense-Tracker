@@ -1,6 +1,28 @@
 {% extends "myapp/base.html" %}
 {% load static %}
+
+{% block msg %}
+  {% if messages %}
+  {% for message in messages %}
+  <div class="container mx-auto mt-10 space-y-5">
+    <!-- Alert Success  -->
+    <div
+      class="flex justify-between text-{% if message.tags == 'success' %}green{% else %}red{% endif %}-200 shadow-inner rounded p-3 bg-{% if message.tags == 'success' %}green{% else %}red{% endif %}-600"
+    >
+      <p class="self-center">
+        <strong>Success </strong>{{message}}
+      </p>
+      <strong class="text-xl align-center cursor-pointer alert-del"
+        >&times;</strong
+      >
+    </div>
+  {% endfor %}
+  {% endif %}
+{% endblock msg %}
+
 {% block body %}
+
+
 
 <div class="min-h-screen bg-gray-100 py-6 flex flex-col justify-center sm:py-12">
     <div class="relative py-3 sm:max-w-xl sm:mx-auto">
@@ -39,5 +61,14 @@
       </div>
     </div>
   </div>
+
+  <script>
+    document.querySelectorAll('[data-dismissible="alert"]').forEach(function(alert) {
+      var closeButton = alert.querySelector('[data-dismissible-target="alert"]');
+      closeButton.addEventListener('click', function() {
+        alert.style.display = 'none';
+      });
+    });
+  </script>
 
 {% endblock body %}

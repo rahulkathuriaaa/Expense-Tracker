@@ -10,6 +10,8 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
+# line 93 94 28
+
 from pathlib import Path
 import dj_database_url
 import os
@@ -26,8 +28,10 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 #-----------------------------------------------------------------
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DEBUG','FALSE').lower() == 'true'
+# DEBUG = True
 
 ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS').split(' ')
+# ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -147,9 +151,9 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 # LOGIN_REDIRECT_URL :- destination of login page in your urls.py
-LOGIN_REDIRECT_URL = '/'
+# LOGIN_REDIRECT_URL = '/'
 # ACCOUNT_LOGOUT_REDIRECT :- where to redirect when user logout
-ACCOUNT_LOGOUT_REDIRECT = '/'
+# ACCOUNT_LOGOUT_REDIRECT = '/'
 
 
 ACCOUNT_AUTHENTICATION_METHOD = 'email'

@@ -3,6 +3,7 @@ from .forms import ExpenseForm
 from .models import Expense
 from django.db.models import Sum
 import datetime
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 # Create your views here.
 
@@ -21,10 +22,12 @@ def sign_up(request):
         if form.is_valid():
             user = form.save()
             login(request,user)
+            messages.success(request,'User created and signed up successfully')
             return redirect('index')
-
         else:
-            return render(request,'myapp/register.html',{'form':form})
+            messages.error(request,"Enter Valid Information")
+            return redirect('register')
+            # return render(request,'myapp/register.html',{'form':form})
 
     
     return render(request,'myapp/register.html',{'form':form})
@@ -40,7 +43,11 @@ def user_login(request):
 
             if user is not None:
                 login(request,user)
+                messages.success(request,'Logged In Successfully!')
                 return redirect('index')
+            else:
+                messages.error(request,"Enter valid credentials!!")
+                return redirect('login')
             
             
     
@@ -48,6 +55,7 @@ def user_login(request):
 
 def logout_user(request):
     logout(request)
+    messages.success(request,'Logged Out Successfully!')
     return redirect('login')
 
 
@@ -72,7 +80,13 @@ def index(request):
         if form.is_valid():
             expense = form.save(commit=False)
             expense.user = request.user
+            messages.success(request,"Expense added Successfully !!!")
             expense.save() 
+            return redirect('index')
+        else:
+            messages.error(request,"Failed to add Expense")
+            return redirect('index')
+
         
 
     
@@ -124,6 +138,7 @@ def edit(request,id):
         form = ExpenseForm(request.POST,instance=expense)
         if form.is_valid():
             form.save()
+            messages.success(request,'Expense edited Successfully')
             return redirect('index')
     return render(request,'myapp/edit.html',{'expense_form':expense_form})
 
@@ -133,4 +148,5 @@ def delete(request,id):
     if request.method == 'POST' and 'delete' in request.POST:
         expense = Expense.objects.get(id=id)
         expense.delete()
+        messages.error(request,'Expense deleted Successfully')
     return redirect('index')
