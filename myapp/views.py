@@ -73,6 +73,10 @@ def logout_user(request):
 
 #----------------------------------------------------- Code for Expense tracker -----------------------------------------------------
 
+
+def about(request):
+    return render(request,'myapp/about.html')
+
 @login_required(login_url='user/login/')
 def index(request):
     if request.method=='POST':
