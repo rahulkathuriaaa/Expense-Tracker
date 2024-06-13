@@ -100,31 +100,31 @@ def index(request):
 
     #logic to calculate 365 days expenses
     last_year = datetime.date.today() - datetime.timedelta(days=365)
-    data = Expense.objects.filter(date__gt=last_year)
+    data = Expense.objects.filter(date__gt=last_year,user=request.user)
     yearly_sum = data.aggregate(Sum('amount'))
     # print(yearly_sum)
     
     
     #logic to calculate 30 days expenses
     last_month = datetime.date.today() - datetime.timedelta(days=30)
-    data = Expense.objects.filter(date__gt=last_month)
+    data = Expense.objects.filter(date__gt=last_month,user=request.user)
     monthly_sum = data.aggregate(Sum('amount'))
     # print(monthly_sum)
     
     
     #logic to calculate 7 days expenses
     last_week = datetime.date.today() - datetime.timedelta(days=7)
-    data = Expense.objects.filter(date__gt=last_week)
+    data = Expense.objects.filter(date__gt=last_week,user=request.user)
     weekly_sum = data.aggregate(Sum('amount'))
     # print(weekly_sum)
 
 
 
-    daily_sums = Expense.objects.filter().values('date').order_by('date').annotate(sum=Sum('amount'))
+    daily_sums = Expense.objects.filter(user=request.user).values('date').order_by('date').annotate(sum=Sum('amount'))
     # print(daily_sum)
 
 
-    categorical_sums = Expense.objects.filter().values('category').order_by('category').annotate(sum=Sum('amount'))
+    categorical_sums = Expense.objects.filter(user=request.user).values('category').order_by('category').annotate(sum=Sum('amount'))
     # print(categorical_sums)
 
 
